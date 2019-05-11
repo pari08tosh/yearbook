@@ -1,0 +1,32 @@
+.user-card {
+    width: 90%;
+    max-width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+}
+.avatar {
+    width: 90%;
+    max-width: 250px;
+}
+
+.float-right {
+    position: absolute;
+    right: 10px;
+}
+
+.fa-quote-left, .fa-quote-right {
+    font-size: 60% !important;
+    vertical-align: text-top;
+}
+
+.email {
+    word-break: break-all;
+}
+
+.user-card {
+    .img-fluid {
+        max-height: 300px;
+        width: auto !important;
+    }
+
+}

@@ -1,0 +1,31 @@
+.card {
+    max-width: 305px;
+    border-radius: 0px !important;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    input {
+        border-radius: 0px !important;
+        border: none;
+        border-bottom: 2px solid rgb(177, 177, 177);
+    }
+
+    input:focus {
+        border: none;
+        box-shadow: none;
+        border-bottom: 3px solid #2980b9;
+    }
+    .form-control {
+        background-color: rgba(255, 255, 255, 0) !important;
+        
+    }
+    color: black;
+
+    .forgot-password:hover {
+        color: #3498db !important;
+        cursor: pointer;
+    }
+
+    .captcha {
+        position: relative;
+        left: -19px;
+    }
+}

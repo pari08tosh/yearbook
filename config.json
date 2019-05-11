@@ -1,0 +1,7 @@
+{
+    "secret": "yoursecret",
+    "dbURI": "mongodb://localhost:27017/yearbook",
+    "port": 5000,
+    "production": true,
+    "saltRounds": 10
+}

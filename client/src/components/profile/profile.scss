@@ -1,0 +1,41 @@
+.profile-div {
+    .edit-btn-div {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: transparent;
+        opacity: 1;
+        z-index: 100;
+    }
+    .edit-btn {
+        border-radius: 20px;
+    }
+    .yearbookimg {
+        width: 250px;
+        position: relative;
+        left: -30px;
+    }
+    .header {
+        height: 75px;
+    }
+    .user-card {
+        width: 90%;
+        max-width: 350px;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .avatar {
+        width: 90%;
+        max-width: 250px;
+    }
+
+    .float-right {
+        position: absolute;
+        right: 10px;
+    }
+
+    .fa-quote-left, .fa-quote-right {
+        font-size: 60% !important;
+        vertical-align: text-top;
+    }
+}
