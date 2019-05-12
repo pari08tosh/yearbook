@@ -67,6 +67,7 @@ class Loginform extends Component {
   }
 
   onForgotPassword = (e) => {
+    this.setState({ error: ''});
     this.setState({forgotPassword: true});
   }
   
@@ -102,15 +103,19 @@ class Loginform extends Component {
                   <div className="form-group mb-3">
                     <input type="email" className="form-control" id="email" name="email" placeholder="Your DC Email" value={ this.state.email } onChange={ this.onchange } required/>
                   </div>
-                  <div className="captcha mb-3">
-                    <Recaptcha
-                    sitekey="6LcEZnwUAAAAAGiViPP2mbXwvbr31C3k6K5PNpDk"
-                    render="explicit"
-                    verifyCallback={this.onCaptcha}
-                    onloadCallback={this.onCaptcha}
-                    data-size="compact"
-                  />
-                  </div>
+                  {
+                    (!this.state.loading) ? (
+                      <div className="captcha mb-3">
+                      <Recaptcha
+                      sitekey="6LcEZnwUAAAAAGiViPP2mbXwvbr31C3k6K5PNpDk"
+                      render="explicit"
+                      verifyCallback={this.onCaptcha}
+                      onloadCallback={this.onCaptcha}
+                      data-size="compact"
+                      />
+                      </div>
+                    ) : ""
+                  }
                   <button disabled={this.state.loading} type="submit" className="btn btn-block btn-sm btn-primary">Submit</button>
                 </form>
               </div>

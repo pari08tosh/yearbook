@@ -29,7 +29,8 @@ class Profile extends Component {
          linkedinProfile: '',
          avatar: ''
        },
-       posts: []
+       posts: [],
+       loading: false
     };
   }
 
@@ -85,21 +86,37 @@ class Profile extends Component {
   };
 
   onApprove = (post) => {
+    this.setState({
+      posts: this.state.posts.map(arrayPost => {
+        if (arrayPost._id === post._id) { 
+          arrayPost.loading = true;
+         } 
+        return arrayPost;
+      })
+    });
     axios.post('/posts/approvePost', post, {headers: { 'Authorization' : this.props.auth.token }})
     .then(res => {
       this.setState({
         posts: this.state.posts.map(arrayPost => {
           if (arrayPost._id === post._id) { 
             arrayPost.approved = true;
+            arrayPost.loading = false;
            } 
           return arrayPost;
         })
-      }, () => {
       });
     })
     .catch(err => {
       this.props.alert.error(err.response.data.message);
-    });
+      this.setState({
+        posts: this.state.posts.map(arrayPost => {
+          if (arrayPost._id === post._id) { 
+            arrayPost.loading = false;
+           } 
+          return arrayPost;
+        })
+      });
+    })
   };
 
   render() {
@@ -130,7 +147,7 @@ class Profile extends Component {
             </div>
             <div className="">
               {
-                this.state.posts.map((post) => { return <Post key={post._id} post= {post} onApprove={this.onApprove} approve={ (this.props.auth.loggedIn && this.props.match.params.user === this.props.auth.rollnumber) ? true : false } /> })
+                this.state.posts.map((post) => { return <Post key={post._id} post= {post} onApprove={this.onApprove} approve={ ((this.props.auth.loggedIn && this.props.match.params.user === this.props.auth.rollnumber) && !post.loading) ? true : false } /> })
               }
             </div>
           </div>

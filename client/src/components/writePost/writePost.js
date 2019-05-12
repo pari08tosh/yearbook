@@ -33,7 +33,8 @@ class WritePost extends Component {
       postImageVal: '',
       postImage: null,
       recaptchaResponse: '',
-      redirect: ''
+      redirect: '',
+      loading: false
    };
   }
 
@@ -50,7 +51,7 @@ class WritePost extends Component {
     if(e.target.name === 'postImage') {
       this.setState({postImage: e.target.files[0], postImageVal: e.target.value});
     } else {
-      this.setState({[e.target.name]: e.target.value}, () => console.log(this.state));
+      this.setState({[e.target.name]: e.target.value});
     }
   }
 
@@ -68,13 +69,17 @@ class WritePost extends Component {
     fd.append('recaptchaResponse', this.state.recaptchaResponse);
     fd.append('name', this.state.name);
 
+    this.setState({loading: true});
+
     axios.post('/posts/addPost', fd, {headers: { 'content-type': 'multipart/form-data', 'Authorization' : this.props.auth.token }})
     .then(data => {
       this.props.alert.success(data.data.message);
       this.setState({redirect: this.props.match.params.user});
+      this.setState({loading: false});
     })
     .catch(err => {
       this.props.alert.error(err.response.data.message);
+      this.setState({loading: false});
     });
   }
 
@@ -123,15 +128,22 @@ class WritePost extends Component {
                   <label htmlFor="postImage">A Pic For Old Times Sake</label>
                   <input type="file" className="form-control" id="postImage" name="postImage" value={this.state.postImageVal} onChange={this.onChange} />
                 </div>
-                <Recaptcha
-                  sitekey="6LcEZnwUAAAAAGiViPP2mbXwvbr31C3k6K5PNpDk"
-                  render="explicit"
-                  verifyCallback={this.onCaptcha}
-                  onloadCallback={this.onCaptcha}
-                />
+                {
+                  (!this.state.loading) ? (
+                    <div className="captcha mb-3">
+                    <Recaptcha
+                    sitekey="6LcEZnwUAAAAAGiViPP2mbXwvbr31C3k6K5PNpDk"
+                    render="explicit"
+                    verifyCallback={this.onCaptcha}
+                    onloadCallback={this.onCaptcha}
+                    data-size="compact"
+                    />
+                    </div>
+                  ) : ""
+                }
               </div>
             </div>
-            <button type="submit" className="btn btn-primary" disabled={ !this.state.body || !this.state.recaptchaResponse }>Submit</button>
+            <button type="submit" className="btn btn-primary" disabled={ !this.state.body || !this.state.recaptchaResponse || this.state.loading }>Submit</button>
           </form>
         </div>
       </div>

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import './userCard.scss';
 
 export default class UserCard extends Component {
-
   
   toTitleCase(str) {
     return str.replace(
@@ -36,13 +35,13 @@ export default class UserCard extends Component {
               <div className="col-md-9 email">{this.props.user.email}</div>
             </div>
             <div className="pb-3 text-right">
-              <a href={(this.props.user.facebookProfile) ? this.props.user.facebookProfile : null}>
+              <a target="_blank" href={(this.props.user.facebookProfile) ? this.props.user.facebookProfile : null}>
                   <span className="fa-stack fa-lg p-3 px-4">
                   <i className="fa fa-circle fa-stack-2x"></i>
                   <i className="fa fa-facebook fa-stack-1x fa-inverse"></i>
                   </span>
               </a>
-              <a href={(this.props.user.linkedinProfile) ? this.props.user.linkedinProfile : null}>
+              <a target="_blank" href={(this.props.user.linkedinProfile) ? this.props.user.linkedinProfile : null}>
                   <span className="fa-stack fa-lg p-3 px-2">
                   <i className="fa fa-circle fa-stack-2x"></i>
                   <i className="fa fa-linkedin fa-stack-1x fa-inverse"></i>

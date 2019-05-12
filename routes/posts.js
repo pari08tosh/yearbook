@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const jwtMiddleware = require('../JWTMiddleware');
 const multer = require('multer');
 const axios = require('axios');
-
+const User = require('../models/user');
+const mail = require('../mails/mail');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -39,7 +40,6 @@ router.post('/addPost', fileUpload, jwtMiddleware(), (req, res) => {
     axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${captchaObj.secret}&response=${captchaObj.response}`, {}, {headers: {"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"}})
     .then(data => {
         if(data.data.success) {
-
             let postObj = {
                 for: req.body.for,
                 body: req.body.body,
@@ -56,8 +56,21 @@ router.post('/addPost', fileUpload, jwtMiddleware(), (req, res) => {
         
             Post.addPost(newPost)
             .then(data => {
-                res.json({
-                    message: `Successfully submitted post. Waiting for approval.`
+                User.getUserByRollNumber(req.body.for)
+                .then(user => {
+                    console.log("yes");
+                    mail.sendNewPostMail(user.name, postObj.fromName, user.email, (err) => {
+                        if(err) {
+                            console.error(`Error Sending Mail - ${err}`);
+                            return res.status(500).json({
+                                message: `Something went wrong`
+                            });
+                        } else {
+                            return res.status(200).json({
+                                message: `Successfully submitted post. Waiting for approval.`
+                            });
+                        }
+                    })
                 });
             })
             .catch(err => {
@@ -114,8 +127,35 @@ router.post('/approvePost', jwtMiddleware(), (req, res) => {
     if(req.auth.rollno === req.body.for) {
         Post.approvePost(req.body._id)
         .then(data => {
-            return res.json({
-                success: true
+            User.getUserByRollNumber(req.body.for)
+            .then(forUser => {
+                User.getUserByRollNumber(req.body.fromRollnumber)
+                .then(fromUser => {
+                    mail.sendPostApprovedMail(forUser.name, fromUser.name, fromUser.email, (err) => {
+                        if(err) {
+                            console.error(`Error Sending Mail - ${err}`);
+                            return res.status(500).json({
+                                message: `Something went wrong`
+                            });
+                        } else {
+                            return res.json({
+                                success: true
+                            });
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error(`Error fetching fromUser in approve post - ${err}`);
+                    return res.status(500).json({
+                        message: `Something went wrong.`
+                    });
+                });
+            })
+            .catch(err => {
+                console.error(`Error fetching forUser in approve post - ${err}`);
+                return res.status(500).json({
+                    message: `Something went wrong.`
+                });
             });
         })
         .catch(err => {
